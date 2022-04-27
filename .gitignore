@@ -1,0 +1,14 @@
+.env
+coverage
+typechain
+node_modules
+coverage.json
+log/log.json
+scripts/standardDeploy.js
+
+#Hardhat files
+cache
+artifacts
+
+
+
