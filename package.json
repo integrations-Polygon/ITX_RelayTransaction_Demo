@@ -1,0 +1,22 @@
+{
+  "name": "itx-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-etherscan": "^3.0.3",
+    "axios": "^0.27.1",
+    "dotenv": "^16.0.0",
+    "ethers": "^5.6.4",
+    "hardhat": "^2.9.3",
+    "prompt-sync": "^4.2.0",
+    "redis": "^4.0.6"
+  }
+}
