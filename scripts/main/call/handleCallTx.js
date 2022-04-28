@@ -40,7 +40,7 @@ const handleCallTx = async ({
         to: contractAddress,
         nonce: nonce,
         data: encodedFunctionData,
-        gasLimit: gasLimit,
+        gas: gasLimit.toString(),
         // "fast" and "slow" supported
         schedule: "fast",
       }
@@ -54,22 +54,23 @@ const handleCallTx = async ({
             txPayload.to,
             txPayload.nonce,
             txPayload.data,
-            txPayload.gasLimit,
+            txPayload.gas,
             txPayload.schedule,
           ]
         )
       )
-
+      console.log("before signature")
       // Sign the relay transaction hash
       const signature = await signer.signMessage(
         ethers.utils.arrayify(relayTransactionHashToSign)
       )
-
+      console.log("before sentAtBlock")
       // Relay the transaction through itx
       const sentAtBlock = await itx.getBlockNumber()
 
       // Send the signed relay transaction hash to the network
       // with its transaction payload object and signature
+      console.log("before sendTransaction")
       const { relayTransactionHash } = await itx.send("relay_sendTransaction", [
         txPayload,
         signature,
@@ -108,7 +109,7 @@ const handleCallTx = async ({
         to: contractAddress,
         data: encodedFunctionData,
         nonce: nonce,
-        gasLimit: gasLimit,
+        gas: gasLimit.toString(),
         // "fast" and "slow" supported
         schedule: "fast",
       }
@@ -116,38 +117,36 @@ const handleCallTx = async ({
       // Sign a relay request using the signer's private key
       const relayTransactionHashToSign = ethers.utils.keccak256(
         ethers.utils.defaultAbiCoder.encode(
-          ["uint", "address", "uint", "bytes", "uint", "string"],
+          ["uint", "address", "bytes", "uint", "uint", "string"],
           [
             txPayload.type,
             txPayload.to,
-            txPayload.nonce,
             txPayload.data,
-            txPayload.gasLimit,
+            txPayload.nonce,
+            txPayload.gas,
             txPayload.schedule,
           ]
         )
       )
-
       // Sign the relay transaction hash
       const signature = await signer.signMessage(
         ethers.utils.arrayify(relayTransactionHashToSign)
       )
-
-      // Relay the transaction through itx
       const sentAtBlock = await itx.getBlockNumber()
-
+      const { balance } = await itx.send("relay_getBalance", [signer.address])
+      const matic = ethers.utils.formatEther(balance)
+      console.log(`Current ITX balance: ${matic} MATIC`)
+      // Relay the transaction through itx
       // Send the signed relay transaction hash to the network
       // with its transaction payload object and signature
       const { relayTransactionHash } = await itx.send("relay_sendTransaction", [
         txPayload,
         signature,
       ])
-      console.log(
-        `Your transaction is being mined and the gas price being used is ${maxFeeInGWEI} GWEI`
-      )
+      console.log(`Your transaction is being mined...`)
       console.log(`ITX relay transaction hash: ${relayTransactionHash}`)
       console.log("You can check your transaction at:")
-      console.log(`https://polygonscan.com/tx/${txHash}\n`)
+      console.log(`https://polygonscan.com/tx/${relayTransactionHash}\n`)
 
       const txReceipt = waitForTransaction(
         relayTransactionHash,
