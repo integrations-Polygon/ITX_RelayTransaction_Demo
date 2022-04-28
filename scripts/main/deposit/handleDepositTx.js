@@ -54,7 +54,7 @@ const handleDepositTx = async ({ signer, txType, nonce, amount, itx }) => {
     // For type 2 transaction
     if (txType === "2") {
       // Fetch the latest gas price data from the polygon v2 gas station API
-      const type2GasData = fetchGasPriceEIP1559()
+      const type2GasData = await fetchGasPriceEIP1559()
 
       if (type2GasData === undefined) {
         console.log("Error in type2GasData")
