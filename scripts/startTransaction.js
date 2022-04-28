@@ -1,6 +1,7 @@
 const ps = require("prompt-sync")
 const prompt = ps()
-// const send = require("./main/send/send")
+const send = require("./main/send/send")
+const deploy = require("./main/deploy/deploy")
 const call = require("./main/call/call")
 const deposit = require("./main/deposit/deposit")
 // const redisDB = require("./main/utils/redisDB")
@@ -33,13 +34,17 @@ async function startTransaction() {
 
   try {
     if (choice === "1") txReceipt = await deposit()
-    // if (choice === "2") txReceipt = await deploy()
+    if (choice === "2") txReceipt = await deploy()
     if (choice === "3") txReceipt = await call()
+<<<<<<< HEAD
     // if (choice === "4") txReceipt = await send()
     if (choice === "5") {
       await balance()
       process.exit(0)
     }
+=======
+    if (choice === "4") txReceipt = await send()
+>>>>>>> 2384ca5c480c7842fd90387653886f746fd004b2
     if (txReceipt !== null && txReceipt !== undefined) {
       // success transaction receipt gets mapped here
       const mappedReceipt = await dataMapping(txReceipt)
