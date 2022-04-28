@@ -36,15 +36,11 @@ async function startTransaction() {
     if (choice === "1") txReceipt = await deposit()
     if (choice === "2") txReceipt = await deploy()
     if (choice === "3") txReceipt = await call()
-<<<<<<< HEAD
-    // if (choice === "4") txReceipt = await send()
+    if (choice === "4") txReceipt = await send()
     if (choice === "5") {
       await balance()
       process.exit(0)
     }
-=======
-    if (choice === "4") txReceipt = await send()
->>>>>>> 2384ca5c480c7842fd90387653886f746fd004b2
     if (txReceipt !== null && txReceipt !== undefined) {
       // success transaction receipt gets mapped here
       const mappedReceipt = await dataMapping(txReceipt)
