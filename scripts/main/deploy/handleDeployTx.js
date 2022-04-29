@@ -1,7 +1,6 @@
 const ethers = require("ethers")
 const waitForTransaction = require("../utils/waitForTransaction")
 
-
 const handleDeployTx = async ({
   signer,
   txType,
@@ -22,29 +21,33 @@ const handleDeployTx = async ({
 
     // For type 1 transaction
     if (txType === "1") {
-
       // Get the estimated gas limit for this tx payload
       const gasLimit = await itx.estimateGas({
+        to: ethers.constants.AddressZero,
+        data: deployTransactionData,
         type: 1,
         nonce: nonce,
         gasLimit: 14_999_999, // polygon transaction limit
-        data: deployTransactionData,
       })
       // Transaction payload object with your encoded estimated gas limit
       const txPayload = {
+        to: ethers.constants.AddressZero,
+        data: deployTransactionData,
         type: 1,
         nonce: nonce,
-        gasLimit: gasLimit,
+        gasLimit: gas,
         schedule: "fast",
       }
       // Sign a relay request using the signer's private key
       const relayTransactionHashToSign = ethers.utils.keccak256(
         ethers.utils.defaultAbiCoder.encode(
-          ["uint", "uint", "uint", "string"],
+          ["address", "bytes", "uint", "uint", "uint", "string"],
           [
+            txPayload.to,
+            txPayload.data,
             txPayload.type,
             txPayload.nonce,
-            txPayload.gasLimit,
+            txPayload.gas,
             txPayload.schedule,
           ]
         )
@@ -67,7 +70,7 @@ const handleDeployTx = async ({
         txPayload,
         signature,
       ])
-      
+
       console.log(
         `Your transaction is being mined and the gas price being used is ${maxFeeInGWEI} GWEI`
       )
@@ -87,30 +90,33 @@ const handleDeployTx = async ({
 
     // For type 2 transaction
     if (txType === "2") {
-
       // Get the estimated gas limit for this tx payload
       const gasLimit = await itx.estimateGas({
+        data: deployTransactionData,
         type: 2,
         nonce: nonce,
         gasLimit: 14_999_999, // polygon transaction limit
-        data: deployTransactionData,
       })
       // Transaction payload object with your encoded estimated gas limit
       const txPayload = {
-        type: 2,
-        nonce: nonce,
-        gasLimit: gasLimit,
+        to: ethers.constants.AddressZero.toString(),
+        data: deployTransactionData.toString(),
+        type: "2",
+        nonce: nonce.toString(),
+        gas: gasLimit.toString(),
         schedule: "fast",
       }
 
       // Sign a relay request using the signer's private key
       const relayTransactionHashToSign = ethers.utils.keccak256(
         ethers.utils.defaultAbiCoder.encode(
-          ["uint", "uint", "uint", "string"],
+          ["address", "bytes", "uint", "uint", "uint", "string"],
           [
+            txPayload.to,
+            txPayload.data,
             txPayload.type,
             txPayload.nonce,
-            txPayload.gasLimit,
+            txPayload.gas,
             txPayload.schedule,
           ]
         )

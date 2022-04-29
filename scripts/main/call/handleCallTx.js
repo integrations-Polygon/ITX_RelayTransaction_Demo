@@ -59,12 +59,11 @@ const handleCallTx = async ({
           ]
         )
       )
-      console.log("before signature")
+
       // Sign the relay transaction hash
       const signature = await signer.signMessage(
         ethers.utils.arrayify(relayTransactionHashToSign)
       )
-      console.log("before sentAtBlock")
       // Relay the transaction through itx
       const sentAtBlock = await itx.getBlockNumber()
 
