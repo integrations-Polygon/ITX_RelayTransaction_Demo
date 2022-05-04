@@ -2,8 +2,8 @@ const sleep = require("./sleep")
 async function waitForTransaction(relayTransactionHash, sentAtBlock, itx) {
   try {
     let mined = false
+    console.log("Start relay_getTransactionStatus\n")
     while (!mined) {
-      console.log("Start relay_getTransactionStatusn\n")
       const statusResponse = await itx.send("relay_getTransactionStatus", [
         relayTransactionHash,
       ])
@@ -19,9 +19,17 @@ async function waitForTransaction(relayTransactionHash, sentAtBlock, itx) {
           ) {
             mined = true
             console.log(`Transaction hash: ${txReceipt.transactionHash}`)
-            console.log(`Sent at block ${sentAtBlock}`)
-            console.log(`Mined in block ${txReceipt.blockNumber}`)
-            console.log(`Total blocks ${txReceipt.blockNumber - sentAtBlock}`)
+            console.log("You can check your transaction at:")
+            console.log(
+              `https://polygonscan.com/tx/${txReceipt.transactionHash}\n`
+            )
+            console.log(`Transaction sent at block: ${sentAtBlock}`)
+            console.log(`Transaction mined in block: ${txReceipt.blockNumber}`)
+            console.log(
+              `Total number of blocks generated while mining: ${
+                txReceipt.blockNumber - sentAtBlock
+              }`
+            )
             return txReceipt
           }
         }
