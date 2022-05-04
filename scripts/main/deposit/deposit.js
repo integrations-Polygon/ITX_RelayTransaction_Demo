@@ -9,7 +9,7 @@ const ethers = require("ethers")
 const isNumeric = require("../utils/isNumeric")
 const handleDepositTx = require("./handleDepositTx")
 
-const depositMATIC = async (txType, amountInMATIC) => {
+const depositMATIC = async (amountInMATIC) => {
   try {
     // Using Infura provider to connect to the blockchain
     const itx = new ethers.providers.InfuraProvider(network, projectID)
@@ -29,7 +29,6 @@ const depositMATIC = async (txType, amountInMATIC) => {
     // To start the transaction process
     const userTxData = {
       signer,
-      txType,
       nonce,
       amount,
       itx,
@@ -63,12 +62,6 @@ const depositMATIC = async (txType, amountInMATIC) => {
 
 async function deposit() {
   // Basic user input and input checks
-  const txType = prompt(
-    "Enter the transaction type (1 for legacy || 2 for EIP-1559): "
-  )
-  if (!txType) return console.log("Transaction type cannot be null")
-  if (txType !== "1" && txType !== "2")
-    return console.log(`Transaction type ${txType} is unsupported`)
 
   const amountInMATIC = prompt("Enter the amount of MATIC to transfer: ")
   if (!amountInMATIC) return console.log("Transfer amount cannot be null")
@@ -82,7 +75,7 @@ async function deposit() {
   console.log("\nFetching all the necessary data to start mining\n")
 
   // Pass the user input data object to start the transaction process
-  const txReceipt = await depositMATIC(txType, amountInMATIC)
+  const txReceipt = await depositMATIC(amountInMATIC)
 
   return txReceipt
 }

@@ -11,7 +11,6 @@ const isNumeric = require("../utils/isNumeric")
 const { fetchAbiData } = require("../utils/fetchData")
 
 const contractFunctionCall = async ({
-  txType,
   contractAddress,
   functionName,
   arrayOfArgs,
@@ -41,7 +40,6 @@ const contractFunctionCall = async ({
     // To start the transaction process
     const userTxData = {
       signer,
-      txType,
       contractAddress,
       functionName,
       arrayOfArgs,
@@ -69,12 +67,7 @@ async function call() {
   let arrayOfArgs = []
 
   // Basic user input and input checks
-  const txType = prompt(
-    "Enter the transaction type (1 for legacy || 2 for EIP-1559): "
-  )
-  if (!txType) return console.log("Transaction type cannot be null")
-  if (txType !== "1" && txType !== "2")
-    return console.log(`Transaction type ${txType} is unsupported`)
+
   const contractAddress = prompt(
     "Enter the deployed & verified smart contract address: "
   )
@@ -94,7 +87,6 @@ async function call() {
 
   // Stores all the user input data in an object
   const userInputData = {
-    txType,
     contractAddress,
     functionName,
     arrayOfArgs,
