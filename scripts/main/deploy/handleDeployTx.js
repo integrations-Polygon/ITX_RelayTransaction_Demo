@@ -28,25 +28,23 @@ const handleDeployTx = async ({
     })
     // Transaction payload object with your encoded estimated gas limit
     const txPayload = {
-      // type: 2,
       to: ethers.constants.AddressZero,
       data: deployTransactionData,
-      // nonce: nonce,
       gas: gasLimit.toString(),
       // "fast" and "slow" supported
       schedule: "fast",
     }
 
-    // Sign a relay request using the signer's private key
+    // Generate an encoded relay transaction hash
     const relayTransactionHashToSign = ethers.utils.keccak256(
       ethers.utils.defaultAbiCoder.encode(
         ["address", "bytes", "uint", "uint", "string"],
         [
           txPayload.to,
           txPayload.data,
-          // txPayload.nonce,
+          ,
           txPayload.gas,
-          137,
+          137, // Polygon matic chain ID
           txPayload.schedule,
         ]
       )
@@ -59,9 +57,6 @@ const handleDeployTx = async ({
 
     // Relay the transaction through itx
     const sentAtBlock = await itx.getBlockNumber()
-
-    // Deploy the contract with the arguments passed by the user
-    //const contract = await factory.deploy(...arrayOfArgs, txPayload)
 
     // Send the signed relay transaction hash to the network
     // with its transaction payload object and signature

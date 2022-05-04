@@ -32,26 +32,22 @@ const handleCallTx = async ({
 
     // Transaction payload object with your encoded function data & estimated gas limit
     const txPayload = {
-      // type: 2,
       to: contractAddress,
       data: encodedFunctionData,
-      // nonce: nonce,
       gas: gasLimit.toString(),
       // "fast" and "slow" supported
       schedule: "fast",
     }
 
-    // Sign a relay request using the signer's private key
+    // Generate an encoded relay transaction hash
     const relayTransactionHashToSign = ethers.utils.keccak256(
       ethers.utils.defaultAbiCoder.encode(
         ["address", "bytes", "uint", "uint", "string"],
         [
-          //  txPayload.type,
           txPayload.to,
           txPayload.data,
-          // txPayload.nonce,
           txPayload.gas,
-          137,
+          137, // Polygon matic chain ID
           txPayload.schedule,
         ]
       )
@@ -64,6 +60,7 @@ const handleCallTx = async ({
     const { balance } = await itx.send("relay_getBalance", [signer.address])
     const matic = ethers.utils.formatEther(balance)
     console.log(`Current ITX balance: ${matic} MATIC`)
+
     // Relay the transaction through itx
     // Send the signed relay transaction hash to the network
     // with its transaction payload object and signature
