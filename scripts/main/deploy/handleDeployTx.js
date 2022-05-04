@@ -1,13 +1,7 @@
 const ethers = require("ethers")
 const waitForTransaction = require("../utils/waitForTransaction")
 
-const handleDeployTx = async ({
-  signer,
-  nonce,
-  metadata,
-  arrayOfArgs,
-  itx,
-}) => {
+const handleDeployTx = async ({ signer, metadata, arrayOfArgs, itx }) => {
   let gasLimit
   try {
     const factory = new ethers.ContractFactory(
@@ -21,9 +15,7 @@ const handleDeployTx = async ({
 
     // Get the estimated gas limit for this tx payload
     gasLimit = await itx.estimateGas({
-      type: 2,
       data: deployTransactionData,
-      nonce: nonce,
       gasLimit: 14_999_999, // polygon transaction limit
     })
     // Transaction payload object with your encoded estimated gas limit
@@ -42,7 +34,6 @@ const handleDeployTx = async ({
         [
           txPayload.to,
           txPayload.data,
-          ,
           txPayload.gas,
           137, // Polygon matic chain ID
           txPayload.schedule,
@@ -60,6 +51,7 @@ const handleDeployTx = async ({
 
     // Send the signed relay transaction hash to the network
     // with its transaction payload object and signature
+    console.log("\n\nStart of relay_sendTransaction\n")
     const { relayTransactionHash } = await itx.send("relay_sendTransaction", [
       txPayload,
       signature,

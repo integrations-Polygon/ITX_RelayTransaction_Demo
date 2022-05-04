@@ -7,7 +7,6 @@ const handleCallTx = async ({
   functionName,
   arrayOfArgs,
   iface,
-  nonce,
   itx,
 }) => {
   let gasLimit
@@ -26,7 +25,6 @@ const handleCallTx = async ({
       type: 2,
       to: contractAddress,
       data: encodedFunctionData,
-      nonce: nonce,
       gasLimit: 14_999_999, // polygon transaction limit
     })
 
@@ -64,6 +62,7 @@ const handleCallTx = async ({
     // Relay the transaction through itx
     // Send the signed relay transaction hash to the network
     // with its transaction payload object and signature
+    console.log("\n\nStart of relay_sendTransaction\n")
     const { relayTransactionHash } = await itx.send("relay_sendTransaction", [
       txPayload,
       signature,

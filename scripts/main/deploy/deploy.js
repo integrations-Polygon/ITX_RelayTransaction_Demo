@@ -25,7 +25,6 @@ const Deployment = async ({ arrayOfArgs, metadata }) => {
     // To start the transaction process
     const userTxData = {
       signer,
-      nonce,
       metadata,
       arrayOfArgs,
       itx,

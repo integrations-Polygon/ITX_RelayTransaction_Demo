@@ -40,7 +40,6 @@ const contractFunctionCall = async ({
       functionName,
       arrayOfArgs,
       iface,
-      nonce,
       itx,
     }
 
