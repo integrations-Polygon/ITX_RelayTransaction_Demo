@@ -1,3 +1,6 @@
+const privateKey = process.env.SIGNER_PRIVATE_KEY
+const projectID = process.env.PROJECT_ID
+const network = process.env.NETWORK
 const ps = require("prompt-sync")
 const prompt = ps()
 const fs = require("fs")
@@ -5,12 +8,6 @@ require("dotenv").config()
 const ethers = require("ethers")
 const isNumeric = require("../utils/isNumeric")
 const handleDeployTx = require("./handleDeployTx")
-
-// env variables
-const privateKey = process.env.SIGNER_PRIVATE_KEY
-const projectID = process.env.PROJECT_ID
-const network = process.env.NETWORK
-const walletAddress = process.env.PUBLIC_KEY
 
 const Deployment = async ({ arrayOfArgs, metadata }) => {
   try {
@@ -23,9 +20,6 @@ const Deployment = async ({ arrayOfArgs, metadata }) => {
     // Initialize your wallet account address as your signer
     // pKey here is your metamask account private key
     const signer = new ethers.Wallet("0x" + privateKey, itx)
-
-    // Get your nonce value for your wallet address
-    const nonce = await itx.getTransactionCount(walletAddress)
 
     // Object consisting all the required data of the user transaction
     // To start the transaction process

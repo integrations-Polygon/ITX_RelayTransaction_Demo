@@ -1,4 +1,3 @@
-const walletAddress = process.env.PUBLIC_KEY
 const pKey = process.env.SIGNER_PRIVATE_KEY
 const projectID = process.env.PROJECT_ID
 const network = process.env.NETWORK
@@ -32,9 +31,6 @@ const contractFunctionCall = async ({
     // The Interface abstracts the encoding and decoding
     // required to interact with your contracts on the blockchain.
     const iface = new ethers.utils.Interface(abi)
-
-    // Get your nonce value for your wallet address
-    const nonce = await itx.getTransactionCount(walletAddress)
 
     // Object consisting all the required data of the user transaction
     // To start the transaction process
