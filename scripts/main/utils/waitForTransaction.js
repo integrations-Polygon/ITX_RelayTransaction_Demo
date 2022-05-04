@@ -2,7 +2,7 @@ const sleep = require("./sleep")
 async function waitForTransaction(relayTransactionHash, sentAtBlock, itx) {
   try {
     let mined = false
-    console.log("Start relay_getTransactionStatus\n")
+    console.log("\nStart of relay_getTransactionStatus\n")
     while (!mined) {
       const statusResponse = await itx.send("relay_getTransactionStatus", [
         relayTransactionHash,
@@ -18,7 +18,9 @@ async function waitForTransaction(relayTransactionHash, sentAtBlock, itx) {
             txReceipt.confirmations > 1
           ) {
             mined = true
-            console.log(`Transaction hash: ${txReceipt.transactionHash}`)
+            console.log(
+              `Generated transaction hash: ${txReceipt.transactionHash}`
+            )
             console.log("You can check your transaction at:")
             console.log(
               `https://polygonscan.com/tx/${txReceipt.transactionHash}\n`
