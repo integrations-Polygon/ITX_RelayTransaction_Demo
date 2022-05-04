@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-contract ItxDemo {
+contract ItxSample {
     uint256 private sumOfArgs;
     uint256 private arg1;
     uint256 private arg2;

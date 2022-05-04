@@ -12,6 +12,7 @@ const handleCallTx = async ({
   itx,
 }) => {
   let gasLimit
+  const chainID = "137"
   try {
     /* Encoding the function data retreived from the user, the parameters
      * has to be converted to strings if you are manually inputting the data
@@ -104,10 +105,10 @@ const handleCallTx = async ({
 
       // Transaction payload object with your encoded function data & estimated gas limit
       const txPayload = {
-        type: 2,
+        // type: 2,
         to: contractAddress,
         data: encodedFunctionData,
-        nonce: nonce,
+        // nonce: nonce,
         gas: gasLimit.toString(),
         // "fast" and "slow" supported
         schedule: "fast",
@@ -116,13 +117,14 @@ const handleCallTx = async ({
       // Sign a relay request using the signer's private key
       const relayTransactionHashToSign = ethers.utils.keccak256(
         ethers.utils.defaultAbiCoder.encode(
-          ["uint", "address", "bytes", "uint", "uint", "string"],
+          ["address", "bytes", "uint", "uint", "string"],
           [
-            txPayload.type,
+            //  txPayload.type,
             txPayload.to,
             txPayload.data,
-            txPayload.nonce,
+            // txPayload.nonce,
             txPayload.gas,
+            137,
             txPayload.schedule,
           ]
         )
@@ -147,7 +149,7 @@ const handleCallTx = async ({
       console.log("You can check your transaction at:")
       console.log(`https://polygonscan.com/tx/${relayTransactionHash}\n`)
 
-      const txReceipt = waitForTransaction(
+      const txReceipt = await waitForTransaction(
         relayTransactionHash,
         sentAtBlock,
         itx

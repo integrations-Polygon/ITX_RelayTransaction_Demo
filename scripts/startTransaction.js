@@ -1,6 +1,5 @@
 const ps = require("prompt-sync")
 const prompt = ps()
-const send = require("./main/send/send")
 const deploy = require("./main/deploy/deploy")
 const call = require("./main/call/call")
 const deposit = require("./main/deposit/deposit")
@@ -18,8 +17,7 @@ async function startTransaction() {
   console.log("1. Deposit MATIC tokens to itx gas tank.")
   console.log("2. Deploy your smart contract.")
   console.log("3. Call a function of deployed smart contract.")
-  console.log("4. Send MATIC tokens to a receiving account address.")
-  console.log("5. Check your ITX gas tank balance.\n")
+  console.log("4. Check your ITX gas tank balance.\n")
   const choice = prompt("Enter your choice: ")
   console.log("\n")
   if (!choice) return console.log("Choice cannot be null")
@@ -36,14 +34,14 @@ async function startTransaction() {
     if (choice === "1") txReceipt = await deposit()
     if (choice === "2") txReceipt = await deploy()
     if (choice === "3") txReceipt = await call()
-    if (choice === "4") txReceipt = await send()
-    if (choice === "5") {
+    if (choice === "4") {
       await balance()
       process.exit(0)
     }
     if (txReceipt !== null && txReceipt !== undefined) {
       // success transaction receipt gets mapped here
       const mappedReceipt = await dataMapping(txReceipt)
+      console.log(mappedReceipt)
 
       // saves the mapped transaction receipt in local JSON log file
       await saveReceipt(mappedReceipt)

@@ -26,6 +26,7 @@ async function fetchAbiData(contractAddress) {
   try {
     return (
       await axios.get(
+        // `https://api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${explorerApiKey}`
         `https://api.polygonscan.com/api?module=contract&action=getabi&address=${contractAddress}&apikey=${explorerApiKey}`
       )
     ).data

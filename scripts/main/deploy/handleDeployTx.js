@@ -9,6 +9,8 @@ const handleDeployTx = async ({
   arrayOfArgs,
   itx,
 }) => {
+  let gasLimit
+  const chainID = "137"
   try {
     const factory = new ethers.ContractFactory(
       metadata.abi,
@@ -33,9 +35,9 @@ const handleDeployTx = async ({
       const txPayload = {
         to: ethers.constants.AddressZero,
         data: deployTransactionData,
-        type: 1,
-        nonce: nonce,
-        gasLimit: gas,
+        // type: 1,
+        // nonce: nonce,
+        gas: gasLimit,
         schedule: "fast",
       }
       // Sign a relay request using the signer's private key
@@ -91,32 +93,33 @@ const handleDeployTx = async ({
     // For type 2 transaction
     if (txType === "2") {
       // Get the estimated gas limit for this tx payload
-      const gasLimit = await itx.estimateGas({
-        data: deployTransactionData,
+      gasLimit = await itx.estimateGas({
         type: 2,
+        data: deployTransactionData,
         nonce: nonce,
         gasLimit: 14_999_999, // polygon transaction limit
       })
       // Transaction payload object with your encoded estimated gas limit
       const txPayload = {
-        to: ethers.constants.AddressZero.toString(),
-        data: deployTransactionData.toString(),
-        type: "2",
-        nonce: nonce.toString(),
+        // type: 2,
+        to: ethers.constants.AddressZero,
+        data: deployTransactionData,
+        // nonce: nonce,
         gas: gasLimit.toString(),
+        // "fast" and "slow" supported
         schedule: "fast",
       }
 
       // Sign a relay request using the signer's private key
       const relayTransactionHashToSign = ethers.utils.keccak256(
         ethers.utils.defaultAbiCoder.encode(
-          ["address", "bytes", "uint", "uint", "uint", "string"],
+          ["address", "bytes", "uint", "uint", "string"],
           [
             txPayload.to,
             txPayload.data,
-            txPayload.type,
-            txPayload.nonce,
+            // txPayload.nonce,
             txPayload.gas,
+            137,
             txPayload.schedule,
           ]
         )
@@ -139,15 +142,12 @@ const handleDeployTx = async ({
         txPayload,
         signature,
       ])
-
-      console.log(
-        `Your transaction is being mined and the gas price being used is ${maxFeeInGWEI} GWEI`
-      )
+      console.log(`Your transaction is being mined...`)
       console.log(`ITX relay transaction hash: ${relayTransactionHash}`)
       console.log("You can check your transaction at:")
-      console.log(`https://polygonscan.com/tx/${txHash}\n`)
+      console.log(`https://polygonscan.com/tx/${relayTransactionHash}\n`)
 
-      const txReceipt = waitForTransaction(
+      const txReceipt = await waitForTransaction(
         relayTransactionHash,
         sentAtBlock,
         itx

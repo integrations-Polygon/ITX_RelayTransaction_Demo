@@ -19,33 +19,32 @@ const Deployment = async ({ txType, arrayOfArgs, metadata }) => {
 
     // Using Infura provider to connect to the blockchain
     const itx = new ethers.providers.InfuraProvider(network, projectID)
-    
+
     // Initialize your wallet account address as your signer
     // pKey here is your metamask account private key
-    const signer = new ethers.Wallet(privateKey, itx)
-    
+    const signer = new ethers.Wallet("0x" + privateKey, itx)
+
     // Get your nonce value for your wallet address
     const nonce = await itx.getTransactionCount(walletAddress)
-      
+
     // Object consisting all the required data of the user transaction
     // To start the transaction process
     const userTxData = {
-        signer,
-        txType,
-        nonce,
-        metadata,
-        arrayOfArgs,
-        itx,
-    }  
+      signer,
+      txType,
+      nonce,
+      metadata,
+      arrayOfArgs,
+      itx,
+    }
     // Passing the user transaction data to begin transaction process
     // and get the transaction hash
-    tx = await handleDeployTx(userTxData)
-   
+    txReceipt = await handleDeployTx(userTxData)
+
     // Return the success txReceipt
     if (txReceipt != null) return txReceipt
     console.log("Transaction failed...")
     process.exit(1)
-
   } catch (error) {
     console.log("error in Deployment", error)
     process.exit(1)
@@ -76,13 +75,13 @@ async function deploy() {
       arrayOfArgs[i] = prompt(`Enter your constructor argument [${i + 1}]: `)
   }
   console.log("\nFetching all the necessary data to start mining.\n")
-  
+
   // Stores all the user input data in an object
   const userInputData = { txType, arrayOfArgs, metadata }
 
   // Pass the user input data object to start the transaction process
   const txReceipt = await Deployment(userInputData)
-  
+
   console.log(
     "\nTo verify your deployed smart contract run:\nnpx hardhat verify",
     txReceipt.contractAddress,
