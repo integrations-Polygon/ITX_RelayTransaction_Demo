@@ -3,7 +3,7 @@ const prompt = ps()
 const deploy = require("./main/deploy/deploy")
 const call = require("./main/call/call")
 const deposit = require("./main/deposit/deposit")
-// const redisDB = require("./main/utils/redisDB")
+const redisDB = require("./main/utils/redisDB")
 const saveReceipt = require("./main/utils/saveReceipt")
 const dataMapping = require("./main/utils/dataMapping")
 const balance = require("./main/balance/balance")
@@ -41,13 +41,12 @@ async function startTransaction() {
     if (txReceipt !== null && txReceipt !== undefined) {
       // success transaction receipt gets mapped here
       const mappedReceipt = await dataMapping(txReceipt)
-      console.log(mappedReceipt)
 
       // saves the mapped transaction receipt in local JSON log file
       await saveReceipt(mappedReceipt)
 
       // saves the transaction receipt in redisDB
-      // await redisDB(mappedReceipt)
+      await redisDB(mappedReceipt)
     }
     return
   } catch (error) {
